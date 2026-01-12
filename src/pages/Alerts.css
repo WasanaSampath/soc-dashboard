@@ -1,0 +1,7 @@
+.alerts-page {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+  padding: 24px;
+  height: calc(100vh - 60px);
+}

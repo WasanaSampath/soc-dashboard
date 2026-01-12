@@ -1,0 +1,17 @@
+.dashboard {
+  padding: 24px;
+   display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+.charts-row {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 20px;
+}

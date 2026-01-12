@@ -1,0 +1,17 @@
+.chart-card {
+  background: linear-gradient(180deg, #0b1c33, #071425);
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.04);
+  color: #ffffff;
+}
+
+.chart-card h3 {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.chart-card.wide {
+  grid-column: span 2;
+}

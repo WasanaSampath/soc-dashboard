@@ -1,0 +1,31 @@
+.table-card {
+  background: linear-gradient(180deg, #0b1c33, #071425);
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.04);
+  color: #ffffff;
+}
+
+.table-card h3 {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+th {
+  text-align: left;
+  color: #94a3b8;
+  font-weight: 500;
+  padding: 10px 0;
+}
+
+td {
+  padding: 10px 0;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}

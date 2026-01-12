@@ -1,0 +1,43 @@
+.stat-card {
+  background: linear-gradient(180deg, #0b1c33, #071425);
+  border-radius: 12px;
+  padding: 18px 20px;
+  min-width: 220px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.04);
+}
+
+.stat-content h4 {
+  margin: 0;
+  font-size: 13px;
+  color: #b6c2cf;
+}
+
+.stat-content h2 {
+  margin: 10px 0 6px;
+  font-size: 28px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.stat-content p {
+  margin: 0;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+/* Accent colors */
+.stat-card.red {
+  border-left: 4px solid #ef4444;
+}
+
+.stat-card.green {
+  border-left: 4px solid #22c55e;
+}
+
+.stat-card.yellow {
+  border-left: 4px solid #facc15;
+}
+
+.stat-card.blue {
+  border-left: 4px solid #3b82f6;
+}

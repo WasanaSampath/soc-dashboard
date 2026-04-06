@@ -1,0 +1,110 @@
+.investigation-panel {
+  background: #1e293b;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-top: 1rem;
+  min-height: 400px;
+}
+
+.investigation-panel h2 {
+  color: #e2e8f0;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  border-bottom: 2px solid #334155;
+  padding-bottom: 0.75rem;
+}
+
+.empty-state {
+  color: #94a3b8;
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.1rem;
+}
+
+.alert-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem;
+  background: #0f172a;
+  border-radius: 4px;
+  border-left: 3px solid #334155;
+}
+
+.detail-row .label {
+  color: #94a3b8;
+  font-weight: 600;
+  min-width: 150px;
+}
+
+.detail-row .value {
+  color: #e2e8f0;
+  text-align: right;
+  font-family: 'Courier New', monospace;
+}
+
+.detail-row .value.risk-critical {
+  color: #ef4444;
+  font-weight: 700;
+}
+
+.detail-row .value.risk-high {
+  color: #f97316;
+  font-weight: 700;
+}
+
+.detail-row .value.risk-medium {
+  color: #eab308;
+  font-weight: 700;
+}
+
+.detail-row .value.risk-low {
+  color: #22c55e;
+  font-weight: 700;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.btn-investigate,
+.btn-close {
+  flex: 1;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-investigate {
+  background: #ef4444;
+  color: white;
+}
+
+.btn-investigate:hover {
+  background: #dc2626;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+.btn-close {
+  background: #475569;
+  color: white;
+}
+
+.btn-close:hover {
+  background: #64748b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(71, 85, 105, 0.4);
+}

@@ -4,6 +4,7 @@
   padding: 18px;
   box-shadow: 0 0 0 1px rgba(255,255,255,0.04);
   color: #ffffff;
+  
 }
 
 .chart-card h3 {
@@ -14,4 +15,16 @@
 
 .chart-card.wide {
   grid-column: span 2;
+}
+
+.chart-title {
+  margin-bottom: 25px;   /* Gap between h3 and chart */
+}
+
+.chart-wrapper {
+  margin-bottom: 25px;   /* Gap between chart and legend */
+}
+
+.chart-legend {
+  margin-top: 10px;
 }

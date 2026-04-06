@@ -1,42 +1,118 @@
+import { useEffect, useState } from "react";
 import RiskBadge from "./RiskBadge";
+import { getAlerts } from "../../api/api";
 import "./Table.css";
 
-const data = [
-  {
-    ip: "192.168.45.23",
-    score: 87,
-    risk: "Critical",
-    events: 243,
-    duration: "14 Days",
-    last: "2 min ago",
-  },
-  {
-    ip: "10.0.34.156",
-    score: 72,
-    risk: "High",
-    events: 156,
-    duration: "9 Days",
-    last: "1 hr ago",
-  },
-  {
-    ip: "172.16.89.44",
-    score: 58,
-    risk: "Medium",
-    events: 89,
-    duration: "20 Days",
-    last: "5 hr ago",
-  },
-  {
-    ip: "192.168.12.90",
-    score: 45,
-    risk: "Medium",
-    events: 45,
-    duration: "7 Days",
-    last: "45 min ago",
-  },
-];
-
 function HighRiskTable() {
+  const [highRiskData, setHighRiskData] = useState([]);
+
+  useEffect(() => {
+    const fetchHighRiskIPs = async () => {
+      const alerts = await getAlerts();
+      
+      // Group alerts by IP and aggregate data
+      const ipMap = new Map();
+      
+      alerts.forEach(alert => {
+        const ipKey = alert.ip_port || `${alert.ip}:${alert.port}`;
+        
+        if (!ipMap.has(ipKey)) {
+          ipMap.set(ipKey, {
+            ip: alert.ip,
+            port: alert.port,
+            maxScore: alert.score,
+            maxRisk: alert.risk,
+            totalEvents: 0,
+            firstSeen: alert.details?.first_seen || alert.time,
+            lastSeen: alert.details?.last_seen || alert.time,
+          });
+        }
+        
+        const existing = ipMap.get(ipKey);
+        
+        // Update with highest score
+        if (alert.score > existing.maxScore) {
+          existing.maxScore = alert.score;
+          existing.maxRisk = alert.risk;
+        }
+        
+        // Count events
+        existing.totalEvents += alert.details?.count || 1;
+        
+        // Update timestamps
+        if (alert.details?.first_seen && 
+            new Date(alert.details.first_seen) < new Date(existing.firstSeen)) {
+          existing.firstSeen = alert.details.first_seen;
+        }
+        if (alert.details?.last_seen && 
+            new Date(alert.details.last_seen) > new Date(existing.lastSeen)) {
+          existing.lastSeen = alert.details.last_seen;
+        }
+      });
+      
+      // Convert to array and calculate tracking duration
+      const data = Array.from(ipMap.values()).map(item => {
+        const duration = calculateDuration(item.firstSeen, item.lastSeen);
+        const lastActivity = calculateLastActivity(item.lastSeen);
+        
+        return {
+          ip: item.ip,
+          port: item.port,
+          score: item.maxScore,
+          risk: item.maxRisk,
+          events: item.totalEvents,
+          duration: duration,
+          last: lastActivity,
+        };
+      });
+      
+      // Sort by score (highest first) and take top entries
+      const sorted = data
+        .filter(item => item.risk === "High" || item.risk === "Critical")
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 10);
+      
+      setHighRiskData(sorted);
+    };
+    
+    fetchHighRiskIPs();
+    const interval = setInterval(fetchHighRiskIPs, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const calculateDuration = (firstSeen, lastSeen) => {
+    try {
+      const first = new Date(firstSeen);
+      const last = new Date(lastSeen);
+      const diffMs = last - first;
+      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+      const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+      
+      if (diffDays > 0) return `${diffDays} Days`;
+      if (diffHours > 0) return `${diffHours} Hours`;
+      return "< 1 Hour";
+    } catch (e) {
+      return "Unknown";
+    }
+  };
+
+  const calculateLastActivity = (lastSeen) => {
+    try {
+      const last = new Date(lastSeen);
+      const now = new Date();
+      const diffMs = now - last;
+      const diffMins = Math.floor(diffMs / (1000 * 60));
+      const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+      
+      if (diffMins < 1) return "Just now";
+      if (diffMins < 60) return `${diffMins} min ago`;
+      if (diffHours < 24) return `${diffHours} hr ago`;
+      return `${Math.floor(diffHours / 24)} days ago`;
+    } catch (e) {
+      return lastSeen;
+    }
+  };
+
   return (
     <div className="table-card">
       <h3>Top High Risk IP Addresses</h3>
@@ -45,6 +121,7 @@ function HighRiskTable() {
         <thead>
           <tr>
             <th>IP Address</th>
+            <th>Port</th>
             <th>Suspicious Score</th>
             <th>Risk Level</th>
             <th>Total Events</th>
@@ -54,18 +131,27 @@ function HighRiskTable() {
         </thead>
 
         <tbody>
-          {data.map((row, index) => (
-            <tr key={index}>
-              <td>{row.ip}</td>
-              <td>{row.score}</td>
-              <td>
-                <RiskBadge level={row.risk} />
+          {highRiskData.length === 0 ? (
+            <tr>
+              <td colSpan="7" style={{ textAlign: "center", color: "#94a3b8" }}>
+                No high-risk IPs detected
               </td>
-              <td>{row.events}</td>
-              <td>{row.duration}</td>
-              <td>{row.last}</td>
             </tr>
-          ))}
+          ) : (
+            highRiskData.map((row, index) => (
+              <tr key={index}>
+                <td>{row.ip}</td>
+                <td>{row.port || "-"}</td>
+                <td>{row.score}</td>
+                <td>
+                  <RiskBadge level={row.risk} />
+                </td>
+                <td>{row.events}</td>
+                <td>{row.duration}</td>
+                <td>{row.last}</td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>
